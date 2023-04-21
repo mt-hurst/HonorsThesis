@@ -66,6 +66,36 @@ clf = RandomForestClassifier(n_estimators = 20, random_state = 1111)
 clf = clf.fit(traininput,np.ravel(trainassignments),sample_weight = trainweights)
 
 
+
+# testing impact of number of estimators on results
+estimators = 1
+est_x = [] #x coord list
+y = [] # no pion exit classifier performace
+yy = [] # with pion exit classifier performance
+for i in range(1,21):
+
+  #Creates Binary Classifier where n_estimators is the number of Decision Trees
+  clf = RandomForestClassifier(n_estimators = estimators, random_state = 1111);
+  #Fits the classifier with only SHMX Detector Signal and the Pion Detector signal
+  clf = clf.fit(traininput,np.ravel(trainassignments));
+
+  #Creates Binary Classifier where n_estimators is the number of Decision Trees
+  clf_trig = RandomForestClassifier(n_estimators = estimators, random_state = 1111);
+  #Fits the classifier with the SHMX Detector Signal, Pion Detector Signal, 
+  # AND the boolean of whether the Pion Exit Scintillator saw a charged particle
+  clf_trig = clf_trig.fit(trainarr[0:,1:4], np.ravel(trainassignments));
+  est_x.append(estimators)
+  estimators = 3*i
+  y.append(clf.score(testarr[0:,1:3],testarr[0:,0]))
+  yy.append(clf_trig.score(testarr[0:,1:4],testarr[0:,0]))
+
+
+plt.plot(est_x,y,'--ob',label = 'No Exit Scint')
+plt.plot(est_x,yy,'-or',label = 'With Exit Scint')
+plt.ylabel("Percent of events Correctly Classified", size = 15)
+plt.xlabel("Number of Estimator Decision Trees", size = 15)
+plt.legend()
+
 #Plotting the boundaries of the two Classifiers
 
 inspection.DecisionBoundaryDisplay.from_estimator(clf_old,X =(testarr[0:,1:3]),grid_resolution = 100,cmap = plt.cm.RdBu,alpha = 0.8)
