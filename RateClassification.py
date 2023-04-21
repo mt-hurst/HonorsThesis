@@ -112,3 +112,8 @@ plt.ylabel("PionDetector Data",size = 14)
 plt.title("Boundary of Classifier Regions with Rate Weighting")
 plt.legend()
 
+
+#Replace the clf_old with whatever classifier you want to see the confusion matrix of
+cm = metrics.confusion_matrix(y_labels, clf_old.predict(testarr[0:,1:3]))
+cm_display = metrics.ConfusionMatrixDisplay(cm).plot()
+plt.title("Confusion Matrix", size = 16)
