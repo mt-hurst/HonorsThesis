@@ -1,6 +1,7 @@
 # This python code was run from a Google Colaboratory Notebook with access to my 
 # csv files for training. If you want to run it locally, you'll need
 # sklearn >= 1.2.1
+# 
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -16,6 +17,7 @@ from sklearn import tree
 from sklearn import metrics
 
 #Importing the csv files from my Google Drive
+#To get this to work, you need to have the python
 from google.colab import files
 f = open('/content/drive/MyDrive/Spring 23/Thesis ML/CSVs/pionrate.csv')
 g = open('/content/drive/MyDrive/Spring 23/Thesis ML/CSVs/mollrate.csv')
@@ -24,7 +26,7 @@ pionlines = f.readlines()
 molllines = g.readlines()
 combined = pionlines + molllines
 
-
+#Function for separating data into training and testing set
 def train_dat_create(datalines):
   '''Takes in CVS data in a list and returns two lists of Training Data and Testing Data.
       Training Data is 80% of the input data randomly selected, and Testing Data is 20% of the input data randomly selected'''
@@ -54,6 +56,8 @@ mollarr = np.array(molltrainset)
 
 testarr = np.array(testset) # This is the array that I use for testing
 trainarr = np.array(trainset) # This is the array that I use for Training
+
+#Create Classifiers
 
 #Classifier with NO rate weighting
 
