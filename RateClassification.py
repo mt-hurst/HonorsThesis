@@ -57,18 +57,9 @@ mollarr = np.array(molltrainset)
 testarr = np.array(testset) # This is the array that I use for testing
 trainarr = np.array(trainset) # This is the array that I use for Training
 
-#Create Classifiers
-
-#Classifier with NO rate weighting
-
-clf_old = RandomForestClassifier(n_estimators = 20, random_state = 1111)
-clf_old = clf_old.fit(traininput, np.ravel(trainassignments))
-
-#Creates Binary Classifier where n_estimators is the number of Decision Trees
-clf = RandomForestClassifier(n_estimators = 20, random_state = 1111) 
-#Fits the classifier with only SHMX Detector Signal and the Pion Detector signal
-clf = clf.fit(traininput,np.ravel(trainassignments),sample_weight = trainweights)
-
+traininput = trainarr[0:,1:3]
+trainassignments = trainarr[0:,0]
+trainweights = trainarr[0:,4]
 
 
 # testing impact of number of estimators on results
@@ -100,9 +91,24 @@ plt.ylabel("Percent of events Correctly Classified", size = 15)
 plt.xlabel("Number of Estimator Decision Trees", size = 15)
 plt.legend()
 
+
+#Create Classifiers
+
+#Classifier with NO rate weighting
+
+clf_old = RandomForestClassifier(n_estimators = 20, random_state = 1111)
+clf_old = clf_old.fit(traininput, np.ravel(trainassignments))
+
+#Creates Binary Classifier where n_estimators is the number of Decision Trees
+clf = RandomForestClassifier(n_estimators = 20, random_state = 1111) 
+#Fits the classifier with only SHMX Detector Signal and the Pion Detector signal
+clf = clf.fit(traininput,np.ravel(trainassignments),sample_weight = trainweights)
+
+
+
 #Plotting the boundaries of the two Classifiers
 
-inspection.DecisionBoundaryDisplay.from_estimator(clf_old,X =(testarr[0:,1:3]),grid_resolution = 100,cmap = plt.cm.RdBu,alpha = 0.8)
+d = inspection.DecisionBoundaryDisplay.from_estimator(clf_old,X =(testarr[0:,1:3]),grid_resolution = 100,cmap = plt.cm.RdBu,alpha = 0.8)
 #display.plot()
 plt.ylim(0,1000)
 plt.xlim(0,500)
@@ -123,9 +129,10 @@ plt.xlabel("SHMX Data",size = 14)
 plt.ylabel("PionDetector Data",size = 14)
 plt.title("Boundary of Classifier Regions")
 plt.legend()
-plt.figure()
+plt.colorbar(d.ax_.collections[1])
+d.ax_.collections[1].set_cmap(plt.cm.RdBu)
 
-inspection.DecisionBoundaryDisplay.from_estimator(clf,X =(testarr[0:,1:3]),grid_resolution = 100,cmap = plt.cm.RdBu,alpha = 0.8)
+h = inspection.DecisionBoundaryDisplay.from_estimator(clf,X =(testarr[0:,1:3]),grid_resolution = 100,cmap = plt.cm.RdBu,alpha = 0.8)
 #display.plot()
 plt.ylim(0,1000)
 plt.xlim(0,500)
@@ -145,7 +152,8 @@ plt.xlabel("SHMX Data",size = 14)
 plt.ylabel("PionDetector Data",size = 14)
 plt.title("Boundary of Classifier Regions with Rate Weighting")
 plt.legend()
-
+plt.colorbar(h.ax_.collections[1])
+h.ax_.collections[1].set_cmap(plt.cm.RdBu)
 
 #Replace the clf_old with whatever classifier you want to see the confusion matrix of
 cm = metrics.confusion_matrix(y_labels, clf_old.predict(testarr[0:,1:3]))
