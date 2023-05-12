@@ -70,9 +70,9 @@ yy = [] # with pion exit classifier performance
 for i in range(1,21):
 
   #Creates Binary Classifier where n_estimators is the number of Decision Trees
-  clf = RandomForestClassifier(n_estimators = estimators, random_state = 1111);
+  clf_simple = RandomForestClassifier(n_estimators = estimators, random_state = 1111);
   #Fits the classifier with only SHMX Detector Signal and the Pion Detector signal
-  clf = clf.fit(traininput,np.ravel(trainassignments));
+  clf_simple = clf_simple.fit(traininput,np.ravel(trainassignments));
 
   #Creates Binary Classifier where n_estimators is the number of Decision Trees
   clf_trig = RandomForestClassifier(n_estimators = estimators, random_state = 1111);
@@ -81,7 +81,7 @@ for i in range(1,21):
   clf_trig = clf_trig.fit(trainarr[0:,1:4], np.ravel(trainassignments));
   est_x.append(estimators)
   estimators = 3*i
-  y.append(clf.score(testarr[0:,1:3],testarr[0:,0]))
+  y.append(clf_simple.score(testarr[0:,1:3],testarr[0:,0]))
   yy.append(clf_trig.score(testarr[0:,1:4],testarr[0:,0]))
 
 
