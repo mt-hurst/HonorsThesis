@@ -104,7 +104,8 @@ clf = RandomForestClassifier(n_estimators = 20, random_state = 1111)
 #Fits the classifier with only SHMX Detector Signal and the Pion Detector signal
 clf = clf.fit(traininput,np.ravel(trainassignments),sample_weight = trainweights)
 
-
+print('The accuracy of the Random Forest Classifier without the Pion Exit data is WITHOUT RATING : '+ str(clf_old.score(testarr[0:,1:3],testarr[0:,0])))
+print('The accuracy of the Random Forest Classifier without the Pion Exit data is : '+ str(clf.score(testarr[0:,1:3],testarr[0:,0])))
 
 #Plotting the boundaries of the two Classifiers
 
