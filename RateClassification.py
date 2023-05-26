@@ -17,7 +17,8 @@ from sklearn import tree
 from sklearn import metrics
 
 #Importing the csv files from my Google Drive
-#To get this to work, you need to have the python
+#To get this to work, you need to have the directories containing your own csv files
+#replace the directories below in f and g
 from google.colab import files
 f = open('/content/drive/MyDrive/Spring 23/Thesis ML/CSVs/pionrate.csv')
 g = open('/content/drive/MyDrive/Spring 23/Thesis ML/CSVs/mollrate.csv')
@@ -101,16 +102,17 @@ clf_old = clf_old.fit(traininput, np.ravel(trainassignments))
 
 #Creates Binary Classifier where n_estimators is the number of Decision Trees
 clf = RandomForestClassifier(n_estimators = 20, random_state = 1111) 
-#Fits the classifier with only SHMX Detector Signal and the Pion Detector signal
+#Fits the classifier with only SHMX Detector Signal and the Pion Detector signal WITH Rate Weighting
 clf = clf.fit(traininput,np.ravel(trainassignments),sample_weight = trainweights)
 
 print('The accuracy of the Random Forest Classifier without the Pion Exit data is WITHOUT RATING : '+ str(clf_old.score(testarr[0:,1:3],testarr[0:,0])))
 print('The accuracy of the Random Forest Classifier without the Pion Exit data is : '+ str(clf.score(testarr[0:,1:3],testarr[0:,0])))
 
 #Plotting the boundaries of the two Classifiers
-
+#Start First boundary plot
 d = inspection.DecisionBoundaryDisplay.from_estimator(clf_old,X =(testarr[0:,1:3]),grid_resolution = 100,cmap = plt.cm.RdBu,alpha = 0.8)
-#display.plot()
+
+#Setting limits on Graph axes and formatting data into plottable format
 plt.ylim(0,1000)
 plt.xlim(0,500)
 pion_1 = []
@@ -126,17 +128,21 @@ moll_1_arr = np.array(moll_1)
 
 plt.scatter(moll_1_arr[0:,0],moll_1_arr[0:,1],s=2,c='r',marker = 'x', label = 'Moller Event')
 plt.scatter(pion_1_arr[0:,0],pion_1_arr[0:,1],s=2,c='b',marker = '^', label = 'Pion Event')
+
+#Labelling plot and adding legend and colorbar
 plt.xlabel("SHMX Data",size = 14)
 plt.ylabel("PionDetector Data",size = 14)
 plt.title("Boundary of Classifier Regions")
 plt.legend()
 plt.colorbar(d.ax_.collections[1])
 d.ax_.collections[1].set_cmap(plt.cm.RdBu)
-
+#Start second boundary plot
 h = inspection.DecisionBoundaryDisplay.from_estimator(clf,X =(testarr[0:,1:3]),grid_resolution = 100,cmap = plt.cm.RdBu,alpha = 0.8)
-#display.plot()
+
+#Setting limits on Graph axes and formatting data into plottable format
 plt.ylim(0,1000)
 plt.xlim(0,500)
+
 pion_2 = []
 moll_2 = []
 for ent in trainarr[0:]:
@@ -149,6 +155,8 @@ moll_2_arr = np.array(moll_2)
 
 plt.scatter(moll_2_arr[0:,0],moll_2_arr[0:,1],s=2,c='r',marker = 'x', label = 'Moller Event')
 plt.scatter(pion_2_arr[0:,0],pion_2_arr[0:,1],s=2,c='b',marker = '^', label = 'Pion Event')
+
+#Labelling plot and adding legend and colorbar
 plt.xlabel("SHMX Data",size = 14)
 plt.ylabel("PionDetector Data",size = 14)
 plt.title("Boundary of Classifier Regions with Rate Weighting")
