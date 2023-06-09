@@ -165,6 +165,6 @@ plt.colorbar(h.ax_.collections[1])
 h.ax_.collections[1].set_cmap(plt.cm.RdBu)
 
 #Replace the clf_old with whatever classifier you want to see the confusion matrix of
-cm = metrics.confusion_matrix(y_labels, clf_old.predict(testarr[0:,1:3]))
+cm = metrics.confusion_matrix(testarr[0:,0], clf_old.predict(testarr[0:,1:3]))
 cm_display = metrics.ConfusionMatrixDisplay(cm).plot()
 plt.title("Confusion Matrix", size = 16)
